@@ -23,18 +23,34 @@ void onRequest(const HttpRequest& req, HttpResponse* resp)
     {
       std::cout << header.first << ": " << header.second << std::endl;
     }
+    const string& body = req.body();
+    std::cout << "body.size() = " << body.size() << std::endl;
+    std::cout << "body: " << body << std::endl;
   }
 
   if (req.path() == "/")
   {
-    resp->setStatusCode(HttpResponse::k200Ok);
-    resp->setStatusMessage("OK");
-    resp->setContentType("text/html");
-    resp->addHeader("Server", "Muduo");
-    string now = Timestamp::now().toFormattedString();
-    resp->setBody("<html><head><title>This is title</title></head>"
+    if (req.method() == HttpRequest::kGet)
+    {
+      resp->setStatusCode(HttpResponse::k200Ok);
+      resp->setStatusMessage("OK");
+      resp->setContentType("text/html");
+      resp->addHeader("Server", "Muduo");
+      string now = Timestamp::now().toFormattedString();
+      resp->setBody("<html><head><title>This is title</title></head>"
         "<body><h1>Hello</h1>Now is " + now +
         "</body></html>");
+    }
+    else if (req.method() == HttpRequest::kPost)
+    {
+      resp->setStatusCode(HttpResponse::k200Ok);
+      resp->setStatusMessage("OK");
+      resp->setContentType("text/html");
+      resp->addHeader("Server", "Muduo");
+      string now = Timestamp::now().toFormattedString();
+      resp->setBody(req.body());
+    }
+   
   }
   else if (req.path() == "/favicon.ico")
   {
