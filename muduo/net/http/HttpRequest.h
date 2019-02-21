@@ -148,6 +148,12 @@ class HttpRequest : public muduo::copyable
     headers_[field] = value;
   }
 
+  void addBody(const char* start, const char* end)
+  {
+    string value(start, end);
+    body_ = value;
+  }
+
   string getHeader(const string& field) const
   {
     string result;
@@ -158,6 +164,12 @@ class HttpRequest : public muduo::copyable
     }
     return result;
   }
+
+  const string& body() const
+  { return body_; }
+
+  void clearBody()
+  { body_.clear(); }
 
   const std::map<string, string>& headers() const
   { return headers_; }
@@ -179,6 +191,7 @@ class HttpRequest : public muduo::copyable
   string query_;
   Timestamp receiveTime_;
   std::map<string, string> headers_;
+  string body_;
 };
 
 }  // namespace net
