@@ -11,6 +11,7 @@
 #ifndef MUDUO_NET_TCPCONNECTION_H
 #define MUDUO_NET_TCPCONNECTION_H
 
+#include <muduo/base/any.h>
 #include <muduo/base/noncopyable.h>
 #include <muduo/base/StringPiece.h>
 #include <muduo/base/Types.h>
@@ -20,7 +21,6 @@
 
 #include <memory>
 
-#include <boost/any.hpp>
 
 // struct tcp_info is in <netinet/tcp.h>
 struct tcp_info;
@@ -77,13 +77,13 @@ class TcpConnection : noncopyable,
   void stopRead();
   bool isReading() const { return reading_; }; // NOT thread safe, may race with start/stopReadInLoop
 
-  void setContext(const boost::any& context)
+  void setContext(const muduo::any& context)
   { context_ = context; }
 
-  const boost::any& getContext() const
+  const muduo::any& getContext() const
   { return context_; }
 
-  boost::any* getMutableContext()
+  muduo::any* getMutableContext()
   { return &context_; }
 
   void setConnectionCallback(const ConnectionCallback& cb)
@@ -148,7 +148,7 @@ class TcpConnection : noncopyable,
   size_t highWaterMark_;
   Buffer inputBuffer_;
   Buffer outputBuffer_; // FIXME: use list<Buffer> as output buffer.
-  boost::any context_;
+  muduo::any context_;
   // FIXME: creationTime_, lastReceiveTime_
   //        bytesReceived_, bytesSent_
 };

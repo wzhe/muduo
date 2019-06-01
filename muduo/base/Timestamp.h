@@ -9,8 +9,6 @@
 #include <muduo/base/copyable.h>
 #include <muduo/base/Types.h>
 
-#include <boost/operators.hpp>
-
 namespace muduo
 {
 
@@ -20,9 +18,7 @@ namespace muduo
 /// This class is immutable.
 /// It's recommended to pass it by value, since it's passed in register on x64.
 ///
-class Timestamp : public muduo::copyable,
-                  public boost::equality_comparable<Timestamp>,
-                  public boost::less_than_comparable<Timestamp>
+class Timestamp : public muduo::copyable
 {
  public:
   ///
@@ -79,20 +75,23 @@ class Timestamp : public muduo::copyable,
   }
 
   static const int kMicroSecondsPerSecond = 1000 * 1000;
+ 
+#define TIMESTAMP_PREDICATE(cmp)                             \
+bool operator cmp (Timestamp that) const {      \
+    return microSecondsSinceEpoch() cmp that.microSecondsSinceEpoch(); \
+  }
+
+  TIMESTAMP_PREDICATE(<);
+  TIMESTAMP_PREDICATE(<=);
+  TIMESTAMP_PREDICATE(>=);
+  TIMESTAMP_PREDICATE(>);
+  TIMESTAMP_PREDICATE(==);
+  TIMESTAMP_PREDICATE(!=);
+#undef TIMESTAMP_PREDICATE
 
  private:
   int64_t microSecondsSinceEpoch_;
 };
-
-inline bool operator<(Timestamp lhs, Timestamp rhs)
-{
-  return lhs.microSecondsSinceEpoch() < rhs.microSecondsSinceEpoch();
-}
-
-inline bool operator==(Timestamp lhs, Timestamp rhs)
-{
-  return lhs.microSecondsSinceEpoch() == rhs.microSecondsSinceEpoch();
-}
 
 ///
 /// Gets time difference of two timestamps, result in seconds.

@@ -6,7 +6,7 @@
 #include <muduo/base/CurrentThread.h>
 
 #include <cxxabi.h>
-#include <execinfo.h>
+//#include <execinfo.h>
 #include <stdlib.h>
 
 namespace muduo
@@ -19,6 +19,7 @@ __thread int t_tidStringLength = 6;
 __thread const char* t_threadName = "unknown";
 static_assert(std::is_same<int, pid_t>::value, "pid_t should be int");
 
+#if 0
 string stackTrace(bool demangle)
 {
   string stack;
@@ -72,6 +73,7 @@ string stackTrace(bool demangle)
   }
   return stack;
 }
+#endif
 
 }  // namespace CurrentThread
 }  // namespace muduo

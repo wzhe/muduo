@@ -6,10 +6,10 @@
 #ifndef MUDUO_BASE_BOUNDEDBLOCKINGQUEUE_H
 #define MUDUO_BASE_BOUNDEDBLOCKINGQUEUE_H
 
+#include <muduo/base/circular_buffer.h>
 #include <muduo/base/Condition.h>
 #include <muduo/base/Mutex.h>
 
-#include <boost/circular_buffer.hpp>
 #include <assert.h>
 
 namespace muduo
@@ -81,7 +81,7 @@ class BoundedBlockingQueue : noncopyable
   mutable MutexLock          mutex_;
   Condition                  notEmpty_ GUARDED_BY(mutex_);
   Condition                  notFull_ GUARDED_BY(mutex_);
-  boost::circular_buffer<T>  queue_ GUARDED_BY(mutex_);
+  muduo::circular_buffer<T>  queue_ GUARDED_BY(mutex_);
 };
 
 }  // namespace muduo
